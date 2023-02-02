@@ -13,7 +13,7 @@ Desafio: Criar uma aplicação web para gerenciar tarefas.
 Desafios adicionais: 
 - Sistema de Login / Logout
 
-# Entregavéis
+# Entregáveis
 
 - Aplicação back-end
 - Aplicação front-end
