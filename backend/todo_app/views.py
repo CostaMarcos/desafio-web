@@ -1,19 +1,18 @@
-from todo_app.serializers import RegisterSerializer, TaskSerializer
+from todo_app.serializers import RegisterSerializer, UserSerializer, TaskSerializer
 from todo_app.models import User, Task
 from rest_framework import viewsets, status, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
-class UserViewSet(
+class RegisterViewSet(
     viewsets.GenericViewSet, mixins.CreateModelMixin
 ):
   serializer_class = RegisterSerializer
-
-  error_message = {"success": False, "msg": "Error creating user"}
 
   def create(self, request, *args, **kwargs):
     partial = kwargs.pop("partial", False)
@@ -21,7 +20,20 @@ class UserViewSet(
     serializer.is_valid(raise_exception=True)
     self.perform_create(serializer)
 
-    return Response(serializer.data)
+    user = User.objects.get(id=serializer.data['id'])
+    refresh = RefreshToken.for_user(user)
+
+    data = {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+    return Response(data, status=status.HTTP_200_OK)
+
+
+class UserViewSet(RetrieveAPIView):
+  queryset = User.objects.all()
+  permission_classes = [IsAuthenticated]
+  serializer_class = UserSerializer
 
 
 class TaskListViewSet(APIView):

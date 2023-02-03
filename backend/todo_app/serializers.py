@@ -32,6 +32,13 @@ class RegisterSerializer(serializers.ModelSerializer):
     return user
 
 
+class UserSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = User
+    fields = ["id", "username", "email"]
+    read_only_field = ["id"]
+
+
 class TaskSerializer(serializers.ModelSerializer):
   class Meta:
     model = Task
