@@ -1,11 +1,72 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
+import { useEffect, useState } from "react";
+import Head from "next/head";
+import dayjs from "dayjs";
+import { authService } from "@/services";
+import { useLogout } from "@/hooks/auth/useLogout";
+import { Task } from "@/types/task";
 
-const inter = Inter({ subsets: ['latin'] })
+const api = authService.instance;
 
 export default function Home() {
+  const [newTask, setNewTask] = useState("");
+  const { logout } = useLogout();
+
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
+
+  const loadTasks = () => {
+    api
+      .get("/tasks/")
+      .then((res) => {
+        const data: Task[] = res.data;
+        setTasks(
+          data
+            .filter((t) => t.status !== "A")
+            .sort((a, b) => {
+              let list = ["P", "D"];
+              return list.indexOf(a.status) - list.indexOf(b.status);
+            })
+        );
+        setArchivedTasks(data.filter((t) => t.status === "A"));
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  useEffect(() => {
+    loadTasks();
+  }, []);
+
+  const addTask = () => {
+    if (newTask) {
+      api
+        .post("/tasks/", {
+          description: newTask,
+          status: "P",
+          due_date: dayjs(new Date()).format("YYYY-MM-DD"),
+        })
+        .then((res) => {
+          loadTasks();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  };
+
+  const setTaskStatus = (task: Task, status: string) => {
+    api.put(`/tasks/${task.id}`, { ...task, status }).then((res) => {
+      loadTasks();
+    });
+  };
+
+  const deleteTask = (id: number) => {
+    api.delete(`/tasks/${id}`).then((res) => {
+      loadTasks();
+    });
+  };
+
   return (
     <>
       <Head>
@@ -14,110 +75,104 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+      <main className="h-full w-full bg-indigo-500 pt-4">
+        <button
+          onClick={logout}
+          className="ml-4 absolute flex justify-center rounded-md border border-transparent bg-red-600 hover:bg-red-700 py-2 px-4 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Logout
+        </button>
+        <div className="h-full w-full flex items-center justify-center bg-indigo-500">
+          <div className="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-4xl">
+            <div className="mb-4">
+              <h1 className="text-grey-darkest font-bold">Todo List</h1>
+              <div className="flex mt-4">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker"
+                  placeholder="Add Todo"
+                  value={newTask}
+                  onChange={(e) => setNewTask(e.target.value)}
+                />
+                <button
+                  onClick={addTask}
+                  className="relative flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+            <div>
+              {tasks.map((task) => (
+                <div
+                  key={task.id}
+                  className="flex mb-4 items-center cursor-pointer"
+                  onClick={() =>
+                    setTaskStatus(task, task.status === "D" ? "P" : "D")
+                  }
+                >
+                  <input
+                    id={`checkbox-${task.id}`}
+                    type="checkbox"
+                    className="mr-2 w-6 h-6 accent-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    checked={task.status === "D"}
+                    readOnly
+                  />
+                  <label
+                    htmlFor={`checkbox-${task.id}`}
+                    className={`w-full text-grey-darkest ${
+                      task.status === "D" ? "line-through" : ""
+                    }`}
+                  >
+                    {task.description}
+                  </label>
+                  <button
+                    type="button"
+                    className="min-w-max p-2 ml-2 mr-2 border-2 rounded hover:text-white text-orange-600 border-orange-600 hover:bg-orange-600"
+                    onClick={() => setTaskStatus(task, "A")}
+                  >
+                    Archive
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteTask(task.id)}
+                    className="w-auto p-2 ml-2 border-2 rounded text-red-600 border-red-600 hover:text-white hover:bg-red-600"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+
+              <h1 className="font-bold">Archived</h1>
+
+              {archivedTasks.map((task) => (
+                <div key={task.id} className="flex mb-4 items-center">
+                  <p
+                    className={`w-full text-grey-darkest ${
+                      task.status === "D" ? "line-through" : ""
+                    }`}
+                  >
+                    {task.description}
+                  </p>
+                  <button
+                    type="button"
+                    className="min-w-max p-2 ml-4 mr-2 border-2 rounded hover:text-white text-gray-600 border-gray-600 hover:bg-gray-600"
+                    onClick={() => setTaskStatus(task, "P")}
+                  >
+                    Unarchive
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteTask(task.id)}
+                    className="w-auto p-2 ml-2 border-2 rounded text-red-600 border-red-600 hover:text-white hover:bg-red-600"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
         </div>
       </main>
     </>
-  )
+  );
 }
