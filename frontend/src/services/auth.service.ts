@@ -11,6 +11,9 @@ export class AuthService {
       timeoutErrorMessage: "Time out!",
     });
     this.instance.interceptors.request.use((config) => {
+      if (config.url === "/token/" || config.url === "/register/") {
+        return config;
+      }
       Object.assign(config.headers, getAuthorizationHeader());
       return config;
     });
@@ -21,6 +24,27 @@ export class AuthService {
       .post("/token/", {
         username,
         password,
+      })
+      .then((res) => {
+        const userData: any = jwtDecode(res.data.access);
+
+        return {
+          id: userData.user_id,
+          accessToken: res.data.access,
+          refreshToken: res.data.refresh,
+          iat: userData.iat,
+          exp: userData.exp,
+        };
+      });
+  };
+
+  register = (username: string, email:string, password: string, password2: string) => {
+    return this.instance
+      .post("/register/", {
+        username,
+        email,
+        password,
+        password2
       })
       .then((res) => {
         const userData: any = jwtDecode(res.data.access);

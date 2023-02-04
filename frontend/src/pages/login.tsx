@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useLogin } from "@/hooks/auth/useLogin";
 
-export default function Home() {
+export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useLogin();
@@ -76,12 +77,12 @@ export default function Home() {
 
               <div className="flex items-center justify-between">
                 <div className="text-sm">
-                  <a
-                    href="#"
+                  <Link
+                    href="/register"
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     Don&apos;t have an account? Sign up
-                  </a>
+                  </Link>
                 </div>
               </div>
 

@@ -4,6 +4,7 @@ import { authRoutes, protectedRoutes } from "./router/routes";
 
 export function middleware(request: NextRequest) {
   const currentUser = request.cookies.get("currentUser")?.value;
+  console.log(currentUser);
 
   if (
     protectedRoutes.includes(request.nextUrl.pathname) &&

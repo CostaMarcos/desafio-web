@@ -118,7 +118,7 @@ export default function Home() {
               </div>
             </div>
             <div>
-              {tasks.map((task) => (
+              {tasks.length > 0 ? tasks.map((task) => (
                 <div
                   key={task.id}
                   className="flex mb-4 items-center cursor-pointer"
@@ -156,11 +156,11 @@ export default function Home() {
                     Remove
                   </button>
                 </div>
-              ))}
+              )) : <p className="text-gray-500">No tasks</p>}
 
-              <h1 className="font-bold">Archived</h1>
+              <h1 className="font-bold mt-4">Archived</h1>
 
-              {archivedTasks.map((task) => (
+              {archivedTasks.length > 0 ? archivedTasks.map((task) => (
                 <div key={task.id} className="flex mb-4 items-center">
                   <div
                     className={"w-full text-grey-darkest"}
@@ -182,7 +182,7 @@ export default function Home() {
                     Remove
                   </button>
                 </div>
-              ))}
+              )) : <p className="text-gray-500">No archived tasks</p>}
             </div>
           </div>
         </div>
