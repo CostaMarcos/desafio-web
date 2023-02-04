@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { authService } from "@/services";
 import { useLogout } from "@/hooks/auth/useLogout";
 import { Task } from "@/types/task";
+import ModalEdit from "@/components/modalEdit";
 
 const api = authService.instance;
 
@@ -13,6 +14,9 @@ export default function Home() {
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const loadTasks = () => {
     api
@@ -67,6 +71,18 @@ export default function Home() {
     });
   };
 
+  const openEditModal = (task: Task) => {
+    setSelectedTask(task);
+    setShowEditModal(true);
+  };
+
+  const editTask = (task: Task) => {
+    api.put(`/tasks/${task.id}`, task).then((res) => {
+      setShowEditModal(false);
+      loadTasks();
+    });
+  };
+
   return (
     <>
       <Head>
@@ -106,9 +122,6 @@ export default function Home() {
                 <div
                   key={task.id}
                   className="flex mb-4 items-center cursor-pointer"
-                  onClick={() =>
-                    setTaskStatus(task, task.status === "D" ? "P" : "D")
-                  }
                 >
                   <input
                     id={`checkbox-${task.id}`}
@@ -116,6 +129,9 @@ export default function Home() {
                     className="mr-2 w-6 h-6 accent-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     checked={task.status === "D"}
                     readOnly
+                    onClick={() =>
+                      setTaskStatus(task, task.status === "D" ? "P" : "D")
+                    }
                   />
                   <label
                     htmlFor={`checkbox-${task.id}`}
@@ -123,14 +139,14 @@ export default function Home() {
                       task.status === "D" ? "line-through" : ""
                     }`}
                   >
-                    {task.description}
+                    <p>{task.description}</p><p className="text-sm text-gray-500">{task.due_date}</p>
                   </label>
                   <button
                     type="button"
-                    className="min-w-max p-2 ml-2 mr-2 border-2 rounded hover:text-white text-orange-600 border-orange-600 hover:bg-orange-600"
-                    onClick={() => setTaskStatus(task, "A")}
+                    className="min-w-max p-2 ml-2 mr-2 border-2 rounded hover:text-white text-blue-600 border-blue-600 hover:bg-blue-600"
+                    onClick={() => openEditModal(task)}
                   >
-                    Archive
+                    Edit
                   </button>
                   <button
                     type="button"
@@ -146,13 +162,11 @@ export default function Home() {
 
               {archivedTasks.map((task) => (
                 <div key={task.id} className="flex mb-4 items-center">
-                  <p
-                    className={`w-full text-grey-darkest ${
-                      task.status === "D" ? "line-through" : ""
-                    }`}
+                  <div
+                    className={"w-full text-grey-darkest"}
                   >
-                    {task.description}
-                  </p>
+                    <p>{task.description}</p><p className="text-sm text-gray-500">{task.due_date}</p>
+                  </div>
                   <button
                     type="button"
                     className="min-w-max p-2 ml-4 mr-2 border-2 rounded hover:text-white text-gray-600 border-gray-600 hover:bg-gray-600"
@@ -172,6 +186,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <ModalEdit show={showEditModal} setShow={setShowEditModal} selectedTask={selectedTask} onConfirm={editTask} />
       </main>
     </>
   );
