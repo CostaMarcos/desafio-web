@@ -1,0 +1,6 @@
+{
+  "python.linting.pylintArgs": [
+    "--disable=W, C, E1101",
+    "--ignored-classes=scoped_session"
+  ]
+}

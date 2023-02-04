@@ -1,6 +1,20 @@
 # Desafio de programação
 
+## Lista de rotas desenvolvidas
+A autenticação foi implementada com base na estratégia JWT
+- **POST** `/token` - Login de usuário
+- **POST** `/register` - Cadastro de usuário
+- **GET** `/tasks` - Listar tarefas do usuário
+- **POST** `/tasks` - Inserir tarefa
+- **PUT** `/tasks/<int:task_id>` - Editar tarefa
+- **DELETE** `/tasks/<int:task_id>` - Deletar tarefa
+
+## Prints das telas desenvolvidas
+
 Desafio: Criar uma aplicação web para gerenciar tarefas.
+| Login | Cadastro | Lista de tarefas | Editar tarefa |
+|---|---|---|---|
+| ![alt text](./docs/login.jpeg) | ![alt text](./docs/register.jpeg) | ![alt text](./docs/main.jpeg) | ![alt text](./docs/edit_task.jpeg) |
 
 # Features
 
