@@ -1,0 +1,15 @@
+.modal {
+    top: 10%;
+    width: 25%;
+    height: 25%;
+    display: block;
+    border-radius: 20px;
+}
+
+.modal-footer {
+    justify-content: space-around;
+}
+
+.modal-content {
+    text-align: center;
+}

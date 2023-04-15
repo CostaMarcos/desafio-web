@@ -1,0 +1,32 @@
+.actions-button {
+    gap: 6px;
+}
+
+.td-description {
+    width: 300px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.view-all {
+    text-decoration: underline;
+    cursor: pointer;
+    display: contents;
+}
+
+.view-modal {
+    text-align: center;
+    height: auto;
+    width: 40%;
+    top: 30%;
+}
+
+.description-text {
+    margin-top: 10px;
+    border: 1px solid black;      
+    border-radius: 5px;
+    padding: 10px;      
+    word-wrap: break-word;      
+    font-size: 16px;    
+}

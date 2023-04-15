@@ -1,0 +1,53 @@
+
+<div *ngIf="isEditModalOpen, else empty">
+    <app-edit-task #editTask (isEditModalOpenChange)="isEditModalOpen = $event" [isEditModalOpen]="isEditModalOpen" [task]="task"></app-edit-task>
+</div>
+
+<div *ngIf="isDeleteModalOpen, else empty">
+    <app-delete-task #deleteTask (isDeleteModalOpenChange)="isDeleteModalOpen = $event" [isDeleteModalOpen]="isDeleteModalOpen" [task]="task"></app-delete-task>
+</div>
+
+<div *ngIf="isDescriptionModalOpen then descriptionView else empty">
+
+</div>
+
+<tr>
+    <td>{{task.title}}</td>
+    <td class="td-description">
+        {{task.description}}
+        <a (click)="openDescriptionViewModal()" class="view-all">View all</a>
+    </td>
+    <td>{{task.due_date}}</td>
+    <td><span class="badge white-text" [ngClass]="getColorBadgeStatus()">{{task.status}}</span></td>
+    <td>
+      <div class="btn-group actions-button">
+        <a class="btn-floating btn-small waves-effect waves-light blue" (click)="clickOptionOnTask('edit')"><i class="material-icons">edit</i></a>
+        <a class="btn-floating btn-small waves-effect waves-light red" (click)="clickOptionOnTask('delete')"><i class="material-icons">delete</i></a>
+        <a class="btn-floating btn-small waves-effect waves-light grey" (click)="clickOptionOnTask('archive')"><i class="material-icons">archive</i></a>
+      </div>
+    </td>
+</tr>
+
+<ng-template #empty></ng-template>
+
+<ng-template #descriptionView>
+    <div style="display: block;" id="edit-modal" class="modal view-modal">
+        <div class="modal-content">
+          <h5>Description</h5>
+            <p class="description-text">
+                {{task.description}}    
+            </p>
+          <div class="modal-footer">
+            <button class="btn" type="button" (click)="cancelAction()">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-overlay" style="z-index: 1002; display: block; opacity: 0.5;"></div>
+      
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+          var elems = document.querySelectorAll('select');
+          var instances = M.FormSelect.init(elems);
+        });
+      </script>
+</ng-template>

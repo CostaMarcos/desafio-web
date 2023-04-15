@@ -1,0 +1,9 @@
+<div class="row">
+    <div class="input-field-task col s10">
+      <input placeholder="Add a task" id="title_task" type="text" class="validate" [(ngModel)]="taskData.title">
+      <label for="title_task"></label>
+    </div>
+    <div class="input-field col s2">
+        <a class="btn-floating btn-large waves-effect waves-light red" (click)="createTask()"><i class="material-icons">add</i></a>
+    </div>        
+</div>

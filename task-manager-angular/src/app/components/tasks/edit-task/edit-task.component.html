@@ -1,0 +1,57 @@
+<div #editModal style="display: block;" id="edit-modal" class="modal edit-modal">
+  <div class="modal-content">
+    <h4 class="edit-modal-title">Edit Task</h4>
+    <div class="input-field">
+      <input id="title-input" type="text" [(ngModel)]="task.title" name="title" required>
+      <label for="title-input" class="active">Title</label>
+    </div>
+    <div class="input-field">
+      <textarea id="description-input" class="materialize-textarea" [(ngModel)]="task.description" name="description" style="overflow-y: scroll;
+      height: 100px;" rows="4" required></textarea>
+      <label for="description-input" class="active">Description</label>
+    </div>
+    <div class="input-field">
+      <input id="due-date-input" type="date" [(ngModel)]="task.due_date" name="due_date" required>
+      <label for="due-date-input" class="active">Due date</label>
+    </div>
+    <div class="input-field col s12">
+      <div>
+        <label>
+          <input class="with-gap" [(ngModel)]="task.status" name="status" type="radio" checked value="Todo" />
+          <span>Todo</span>
+        </label>
+      </div>
+      <div>
+        <label>
+          <input class="with-gap" [(ngModel)]="task.status" name="status" type="radio" value="Doing" />
+          <span>Doing</span>
+        </label>
+      </div>
+      <div>
+        <label>
+          <input class="with-gap" [(ngModel)]="task.status" name="status" type="radio" value="Done" />
+          <span>Done</span>
+        </label>
+      </div>
+      <div>
+        <label>
+          <input class="with-gap" [(ngModel)]="task.status" name="status" type="radio" value="Archived" />
+          <span>Archived</span>
+        </label>
+      </div>
+      <label for="status" class="active">Status</label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" type="button" (click)="cancelAction()">Cancel</button>
+      <button class="btn orange" type="button" (click)="editTask()">Update Task</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" style="z-index: 1002; display: block; opacity: 0.5;"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+  });
+</script>
