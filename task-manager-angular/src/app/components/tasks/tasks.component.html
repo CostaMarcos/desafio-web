@@ -15,8 +15,8 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody *ngFor="let task of tasks">
-                <app-task style="display: contents;" [task]="task"></app-task>
+            <tbody>
+                <app-task *ngFor="let task of tasks" style="display: contents;" [task]="task"></app-task>
             </tbody>
         </table>
     </div>
