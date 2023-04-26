@@ -1,7 +1,7 @@
 .edit-modal {
     top: 15%;
-    width: 50%;
-    height: 65%;
+    /* width: 50%;
+    height: 65%; */
     border-radius: 20px;
 }
 
@@ -15,4 +15,8 @@
 
 .edit-modal-title {
     text-align: center;
+}
+
+.button-action {
+    border-radius: 20px;
 }

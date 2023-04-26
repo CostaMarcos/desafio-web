@@ -1,4 +1,4 @@
-<div #editModal style="display: block;" id="edit-modal" class="modal edit-modal">
+<div #editModal style="display: flex;" id="edit-modal" class="modal edit-modal">
   <div class="modal-content">
     <h4 class="edit-modal-title">Edit Task</h4>
     <div class="input-field">
@@ -42,8 +42,8 @@
       <label for="status" class="active">Status</label>
     </div>
     <div class="modal-footer">
-      <button class="btn" type="button" (click)="cancelAction()">Cancel</button>
-      <button class="btn orange" type="button" (click)="editTask()">Update Task</button>
+      <button class="btn button-action" type="button" (click)="cancelAction()">Cancel</button>
+      <button class="btn orange button-action" type="button" (click)="editTask()">Update Task</button>
     </div>
   </div>
 </div>

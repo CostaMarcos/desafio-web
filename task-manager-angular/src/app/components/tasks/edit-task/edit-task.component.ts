@@ -40,14 +40,6 @@ export class EditTaskComponent {
     console.log("EditTaskComponent.cancelAction()");
 
     this.isEditModalOpen = false;
-    this.isEditModalOpenChange.emit(this.isEditModalOpen)
-
-    this.taskService.put(this.task).subscribe(
-      () => {
-        this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-          this.router.navigate(['tasks'])
-        });
-      }
-    );
+    this.isEditModalOpenChange.emit(this.isEditModalOpen);
   }
 }

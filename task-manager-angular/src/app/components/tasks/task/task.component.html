@@ -17,7 +17,7 @@
         {{task.description}}
         <a (click)="openDescriptionViewModal()" class="view-all">View all</a>
     </td>
-    <td>{{task.due_date}}</td>
+    <td>{{task.due_date | date:'dd-MM-y'}}</td>
     <td><span class="badge white-text" [ngClass]="getColorBadgeStatus()">{{task.status}}</span></td>
     <td>
       <div class="btn-group actions-button">
@@ -38,7 +38,7 @@
                 {{task.description}}    
             </p>
           <div class="modal-footer">
-            <button class="btn" type="button" (click)="cancelAction()">Cancel</button>
+            <button class="btn button-action" type="button" (click)="cancelAction()">Cancel</button>
           </div>
         </div>
       </div>
