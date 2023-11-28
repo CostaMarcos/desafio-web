@@ -1,0 +1,30 @@
+<app-base></app-base>
+<div class="container">
+    <h3>My Tasks</h3>
+
+    <app-create-task></app-create-task>
+
+    <div *ngIf="tasks.length > 0, else noTasks">
+        <table class="striped responsive-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Due date </th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <app-task *ngFor="let task of tasks" style="display: contents;" [task]="task"></app-task>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<ng-template #noTasks>
+    <div style="text-align: center;">
+        <p>Dont have registered tasks!</p>
+    </div>
+</ng-template>

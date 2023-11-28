@@ -1,0 +1,30 @@
+<app-base-auth></app-base-auth>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">Login</h1>
+                    <form [formGroup]="loginForm">
+                        <div class="form-floating mb-3">
+                            <input formControlName="username" type="text" id="username" name="username" class="form-control"
+                                placeholder="username1" required>
+                            <label for="username">Username</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input formControlName="password" type="password" name="password" id="password"
+                                class="form-control" placeholder="Password" required>
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="form-group">
+                            <small routerLink="/signup" class="text-muted">Dont have an account? <b>Sign Up</b></small>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" (click)="login()" class="btn">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
